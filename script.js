@@ -113,13 +113,20 @@ hearts.push(h);
 
 function createName(){
 let nameDisplay = document.getElementById("nameDisplay");
+let subText = document.getElementById("subText");
 nameDisplay.style.opacity = "0";
 nameDisplay.style.transform = "translate(-50%, -50%) scale(0.5)";
+subText.style.opacity = "0";
+subText.style.transform = "translate(-50%, -50%) scale(0.5)";
 
 setTimeout(()=>{
 nameDisplay.style.transition = "all 0.8s ease-out";
 nameDisplay.style.opacity = "1";
 nameDisplay.style.transform = "translate(-50%, -50%) scale(1.2)";
+
+subText.style.transition = "all 0.8s ease-out";
+subText.style.opacity = "1";
+subText.style.transform = "translate(-50%, -50%) scale(1)";
 },100);
 }
 
