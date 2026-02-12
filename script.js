@@ -109,63 +109,18 @@ hearts.push(h);
 }
 
 
-/* 💕 TEXT FORMATION */
+/* 💕 TEXT DISPLAY */
 
 function createName(){
-
-hearts.forEach(h=>{
-gsap.to(h.scale,{x:0,y:0,z:0,duration:0.5});
-});
+let nameDisplay = document.getElementById("nameDisplay");
+nameDisplay.style.opacity = "0";
+nameDisplay.style.transform = "translate(-50%, -50%) scale(0.5)";
 
 setTimeout(()=>{
-
-hearts.forEach(h=>scene.remove(h));
-
-let name="SAMATA";
-
-let canvas=document.createElement("canvas");
-let ctx=canvas.getContext("2d");
-
-canvas.width=700;
-canvas.height=250;
-
-ctx.fillStyle="white";
-ctx.font="bold 160px Arial";
-ctx.textAlign="center";
-ctx.fillText(name,canvas.width/2,170);
-
-let data=ctx.getImageData(0,0,canvas.width,canvas.height).data;
-
-for(let y=0;y<canvas.height;y+=12){
-for(let x=0;x<canvas.width;x+=12){
-
-let index=(y*canvas.width+x)*4;
-
-if(data[index]>128){
-
-let heart=new THREE.Mesh(
-createHeartShape(),
-new THREE.MeshBasicMaterial({
-color:0xff69b4,
-transparent:true,
-opacity:0.9
-})
-);
-
-heart.scale.set(0.22,0.22,0.22);
-
-heart.position.set(
-x-canvas.width/2,
--y+canvas.height/2,
-0
-);
-
-scene.add(heart);
-}
-}
-}
-
-},600);
+nameDisplay.style.transition = "all 0.8s ease-out";
+nameDisplay.style.opacity = "1";
+nameDisplay.style.transform = "translate(-50%, -50%) scale(1.2)";
+},100);
 }
 
 
