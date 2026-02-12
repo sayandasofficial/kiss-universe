@@ -7,19 +7,20 @@ window.innerWidth/window.innerHeight,
 1000
 );
 
-let renderer = new THREE.WebGLRenderer({antialias:true});
+let renderer = new THREE.WebGLRenderer({ antialias:true });
+renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth,window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
 camera.position.z = 80;
 
 
-/* ⭐ STAR GALAXY */
+/* ⭐ STAR FIELD */
 
 let starGeo = new THREE.BufferGeometry();
 let starVertices = [];
 
-for(let i=0;i<1000;i++){
+for(let i=0;i<800;i++){
 starVertices.push(
 (Math.random()-0.5)*400,
 (Math.random()-0.5)*400,
@@ -32,12 +33,11 @@ starGeo.setAttribute(
 new THREE.Float32BufferAttribute(starVertices,3)
 );
 
-let starMaterial = new THREE.PointsMaterial({
-color:0xffffff,
-size:1.2
-});
+let stars = new THREE.Points(
+starGeo,
+new THREE.PointsMaterial({color:0xffffff,size:1.2})
+);
 
-let stars = new THREE.Points(starGeo,starMaterial);
 scene.add(stars);
 
 
@@ -45,12 +45,12 @@ scene.add(stars);
 
 let fireflies=[];
 
-for(let i=0;i<60;i++){
+for(let i=0;i<40;i++){
 
-let geo = new THREE.SphereGeometry(0.8,10,10);
-let mat = new THREE.MeshBasicMaterial({color:0xffff88});
-
-let fly = new THREE.Mesh(geo,mat);
+let fly = new THREE.Mesh(
+new THREE.SphereGeometry(0.8,8,8),
+new THREE.MeshBasicMaterial({color:0xffff88})
+);
 
 fly.position.set(
 (Math.random()-0.5)*120,
@@ -63,82 +63,87 @@ fireflies.push(fly);
 }
 
 
-/* ❤️ PERFECT HEART GEOMETRY */
+/* ❤️ HEART SHAPE */
 
 function createHeartShape(){
 
-const heartShape = new THREE.Shape();
+const heart = new THREE.Shape();
 
-heartShape.moveTo(5,5);
+heart.moveTo(5,5);
+heart.bezierCurveTo(5,5,4,0,0,0);
+heart.bezierCurveTo(-6,0,-6,7,-6,7);
+heart.bezierCurveTo(-6,11,-3,15,5,19);
+heart.bezierCurveTo(12,15,16,11,16,7);
+heart.bezierCurveTo(16,7,16,0,10,0);
+heart.bezierCurveTo(7,0,5,5,5,5);
 
-heartShape.bezierCurveTo(5,5,4,0,0,0);
-heartShape.bezierCurveTo(-6,0,-6,7,-6,7);
-heartShape.bezierCurveTo(-6,11,-3,15,5,19);
-heartShape.bezierCurveTo(12,15,16,11,16,7);
-heartShape.bezierCurveTo(16,7,16,0,10,0);
-heartShape.bezierCurveTo(7,0,5,5,5,5);
+const geo = new THREE.ShapeGeometry(heart);
+geo.center();
 
-const geometry = new THREE.ShapeGeometry(heartShape);
-geometry.center();
-
-return geometry;
+return geo;
 }
 
 
-/* ❤️ FLOATING HEART UNIVERSE */
+/* ❤️ FLOATING HEARTS */
 
 let hearts=[];
-let heartMaterial = new THREE.MeshBasicMaterial({
+let heartMat = new THREE.MeshBasicMaterial({
 color:0xff2e63,
 side:THREE.DoubleSide
 });
 
-for(let i=0;i<150;i++){
+for(let i=0;i<120;i++){
 
-let heart = new THREE.Mesh(createHeartShape(),heartMaterial);
+let h = new THREE.Mesh(createHeartShape(),heartMat);
 
-heart.scale.set(0.3,0.3,0.3);
+h.scale.set(0.3,0.3,0.3);
 
-heart.position.set(
+h.position.set(
 (Math.random()-0.5)*120,
 (Math.random()-0.5)*120,
 (Math.random()-0.5)*120
 );
 
-scene.add(heart);
-hearts.push(heart);
+scene.add(h);
+hearts.push(h);
 }
 
 
-/* 💕 HEART TEXT */
+/* 💕 TEXT FORMATION */
 
 function createName(){
 
-hearts.forEach(h => scene.remove(h));
+hearts.forEach(h=>{
+gsap.to(h.scale,{x:0,y:0,z:0,duration:0.5});
+});
 
-let name = "SAMATA"; // Change name
+setTimeout(()=>{
 
-let canvas = document.createElement("canvas");
-let ctx = canvas.getContext("2d");
+hearts.forEach(h=>scene.remove(h));
 
-canvas.width = 600;
-canvas.height = 200;
+let name="SAMATA";
 
-ctx.fillStyle = "white";
-ctx.font = "bold 120px Arial";
-ctx.textAlign = "center";
-ctx.fillText(name, canvas.width/2, 140);
+let canvas=document.createElement("canvas");
+let ctx=canvas.getContext("2d");
 
-let imageData = ctx.getImageData(0,0,canvas.width,canvas.height).data;
+canvas.width=700;
+canvas.height=250;
 
-for(let y=0; y<canvas.height; y+=8){
-for(let x=0; x<canvas.width; x+=8){
+ctx.fillStyle="white";
+ctx.font="bold 160px Arial";
+ctx.textAlign="center";
+ctx.fillText(name,canvas.width/2,170);
 
-let index = (y * canvas.width + x) * 4;
+let data=ctx.getImageData(0,0,canvas.width,canvas.height).data;
 
-if(imageData[index] > 128){
+for(let y=0;y<canvas.height;y+=12){
+for(let x=0;x<canvas.width;x+=12){
 
-let heart = new THREE.Mesh(
+let index=(y*canvas.width+x)*4;
+
+if(data[index]>128){
+
+let heart=new THREE.Mesh(
 createHeartShape(),
 new THREE.MeshBasicMaterial({
 color:0xff69b4,
@@ -147,58 +152,59 @@ opacity:0.9
 })
 );
 
-heart.scale.set(0.35,0.35,0.35);
+heart.scale.set(0.22,0.22,0.22);
 
-heart.position.x = (x - canvas.width/2) * 0.5;
-heart.position.y = -(y - canvas.height/2) * 0.5;
-heart.position.z = 0;
+heart.position.set(
+x-canvas.width/2,
+-y+canvas.height/2,
+0
+);
 
 scene.add(heart);
 }
 }
 }
+
+},600);
 }
 
 
-/* 💋 BUTTON EVENT */
+/* 💋 BUTTON */
 
 document.getElementById("kissBtn").onclick=()=>{
 
-document.getElementById("bgMusic").play();
+let music=document.getElementById("bgMusic");
+music.currentTime=0;
+music.play().catch(()=>{});
 
 hearts.forEach(h=>{
 gsap.to(h.position,{
-x:h.position.x*2.5,
-y:h.position.y*2.5,
-z:h.position.z*2.5,
+x:h.position.x*2,
+y:h.position.y*2,
+z:h.position.z*2,
 duration:1.2
 });
 });
 
-gsap.to(camera.position,{
-z:50,
-duration:2
-});
+gsap.to(camera.position,{z:50,duration:2});
 
 setTimeout(createName,1300);
 };
 
 
-/* 🎬 ANIMATION LOOP */
+/* 🎬 LOOP */
 
 function animate(){
 
 requestAnimationFrame(animate);
 
-stars.rotation.y += 0.0006;
+stars.rotation.y+=0.0005;
 
-hearts.forEach(h=>{
-h.rotation.z += 0.02;
-});
+hearts.forEach(h=>h.rotation.z+=0.02);
 
 fireflies.forEach(f=>{
-f.position.x += Math.sin(Date.now()*0.001)*0.03;
-f.position.y += Math.cos(Date.now()*0.001)*0.03;
+f.position.x+=Math.sin(Date.now()*0.001)*0.02;
+f.position.y+=Math.cos(Date.now()*0.001)*0.02;
 });
 
 renderer.render(scene,camera);
@@ -211,9 +217,8 @@ animate();
 
 window.addEventListener("resize",()=>{
 
-camera.aspect = window.innerWidth/window.innerHeight;
+camera.aspect=window.innerWidth/window.innerHeight;
 camera.updateProjectionMatrix();
 renderer.setSize(window.innerWidth,window.innerHeight);
 
 });
-
