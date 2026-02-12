@@ -121,18 +121,18 @@ let name = "SAMATA"; // Change name
 let canvas = document.createElement("canvas");
 let ctx = canvas.getContext("2d");
 
-canvas.width = 500;
-canvas.height = 180;
+canvas.width = 600;
+canvas.height = 200;
 
 ctx.fillStyle = "white";
-ctx.font = "bold 100px Arial";
+ctx.font = "bold 120px Arial";
 ctx.textAlign = "center";
-ctx.fillText(name, canvas.width/2, 120);
+ctx.fillText(name, canvas.width/2, 140);
 
 let imageData = ctx.getImageData(0,0,canvas.width,canvas.height).data;
 
-for(let y=0; y<canvas.height; y+=12){
-for(let x=0; x<canvas.width; x+=12){
+for(let y=0; y<canvas.height; y+=8){
+for(let x=0; x<canvas.width; x+=8){
 
 let index = (y * canvas.width + x) * 4;
 
@@ -147,10 +147,10 @@ opacity:0.9
 })
 );
 
-heart.scale.set(0.15,0.15,0.15);
+heart.scale.set(0.35,0.35,0.35);
 
-heart.position.x = x - canvas.width/2;
-heart.position.y = -y + canvas.height/2;
+heart.position.x = (x - canvas.width/2) * 0.5;
+heart.position.y = -(y - canvas.height/2) * 0.5;
 heart.position.z = 0;
 
 scene.add(heart);
