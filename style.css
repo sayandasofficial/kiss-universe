@@ -1,0 +1,27 @@
+body{
+margin:0;
+overflow:hidden;
+background:black;
+font-family:sans-serif;
+}
+
+#kissBtn{
+position:fixed;
+bottom:40px;
+left:50%;
+transform:translateX(-50%);
+padding:15px 35px;
+font-size:20px;
+border:none;
+border-radius:40px;
+background:#ff3b6b;
+color:white;
+cursor:pointer;
+z-index:10;
+box-shadow:0 0 20px #ff3b6b;
+transition:0.3s;
+}
+
+#kissBtn:hover{
+transform:translateX(-50%) scale(1.1);
+}
