@@ -53,3 +53,22 @@ transition:0.3s;
 #kissBtn:hover{
 transform:translateX(-50%) scale(1.1);
 }
+
+/* 📱 Mobile Responsive */
+@media (max-width: 768px){
+#nameDisplay{
+font-size:35px;
+white-space:nowrap;
+max-width:90vw;
+}
+
+#subText{
+font-size:18px;
+}
+
+#kissBtn{
+padding:12px 25px;
+font-size:16px;
+bottom:30px;
+}
+}
